@@ -40,8 +40,8 @@ public class ReadPcapFileWorker extends SwingWorker<List<String>,String> {
         if(!outPutDirectory.endsWith(FILE_SEP)) {
             outPutDirectory = outPutDirectory + FILE_SEP;
         }
-        flowTimeout = 120000000L;
-        activityTimeout = 5000000L;
+        flowTimeout = 3000000L;
+	activityTimeout = 500000L;
     }
 
     public ReadPcapFileWorker(File inputFile, String outPutDir,long param1,long param2) {
