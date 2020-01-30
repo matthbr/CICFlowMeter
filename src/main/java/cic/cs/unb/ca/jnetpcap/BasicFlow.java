@@ -179,8 +179,9 @@ public class BasicFlow {
 				this.fHeaderBytes +=packet.getHeaderBytes();
     			this.forward.add(packet);   
     			this.forwardBytes+=packet.getPayloadBytes();
-    			if (this.forward.size()>1)
+    			if (this.forward.size()>1){
     				this.forwardIAT.addValue(currentTimestamp -this.forwardLastSeen);
+			}
     			this.forwardLastSeen = currentTimestamp;
 				this.min_seg_size_forward = Math.min(packet.getHeaderBytes(),this.min_seg_size_forward);
 
@@ -190,12 +191,12 @@ public class BasicFlow {
 				this.bHeaderBytes+=packet.getHeaderBytes();
     			this.backward.add(packet);
     			this.backwardBytes+=packet.getPayloadBytes();
-    			if (this.backward.size()>1)
+    			if (this.backward.size()>1){
     				this.backwardIAT.addValue(currentTimestamp-this.backwardLastSeen);
+			}
     			this.backwardLastSeen = currentTimestamp;
     		}
-    	}
-		else{
+    	}else{
 			if(packet.getPayloadBytes() >=1) {
 				this.Act_data_pkt_forward++;
 			}
@@ -246,14 +247,16 @@ public class BasicFlow {
 	}
 
 	public double fAvgSegmentSize(){
-		if (this.forward.size()!=0)
+		if (this.forward.size()!=0){
 			return (this.fwdPktStats.getSum() / (double)this.forward.size());
+		}
 		return 0;
 	}
 
 	public double bAvgSegmentSize(){
-		if (this.backward.size()!=0)
+		if (this.backward.size()!=0){
 			return (this.bwdPktStats.getSum() / (double)this.backward.size());
+		}
 		return 0;
 	}
 
@@ -315,21 +318,29 @@ public class BasicFlow {
 
 
 	public long getSflow_fbytes(){
-		if(sfCount <= 0) return 0;
+		if(sfCount <= 0){
+		       	return 0;
+		}
 		return this.forwardBytes/sfCount;
 	}
 
 	public long getSflow_fpackets(){
-		if(sfCount <= 0) return 0;
+		if(sfCount <= 0){
+		       	return 0;
+		}
 		return this.forward.size()/sfCount;
 	}
 
 	public long getSflow_bbytes(){
-		if(sfCount <= 0) return 0;
+		if(sfCount <= 0){
+		       	return 0;
+		}
 		return this.backwardBytes/sfCount;
 	}
 	public long getSflow_bpackets(){
-		if(sfCount <= 0) return 0;
+		if(sfCount <= 0){
+		       	return 0;
+		}
 		return this.backward.size()/sfCount;
 	}
 
@@ -385,8 +396,12 @@ public class BasicFlow {
 	public void updateForwardBulk(BasicPacketInfo packet, long tsOflastBulkInOther){
 
 		long size=packet.getPayloadBytes();
-		if (tsOflastBulkInOther > fbulkStartHelper) fbulkStartHelper = 0;
-		if (size <= 0) return ;
+		if (tsOflastBulkInOther > fbulkStartHelper){
+		       	fbulkStartHelper = 0;
+		}
+		if (size <= 0){
+		       	return ;
+		}
 
 		packet.getPayloadPacket();
 
@@ -429,8 +444,12 @@ public class BasicFlow {
 		bbulkSizeTotal=0;
 		bbulkStateCount=0;*/
 		long size=packet.getPayloadBytes();
-		if (tsOflastBulkInOther > bbulkStartHelper) bbulkStartHelper = 0;
-		if ( size<= 0) return ;
+		if (tsOflastBulkInOther > bbulkStartHelper){
+		       	bbulkStartHelper = 0;
+		}
+		if ( size<= 0){
+			return ;
+		}
 
 		packet.getPayloadPacket();
 
@@ -492,24 +511,27 @@ public class BasicFlow {
 
 	//Client average bytes per bulk
 	public long fAvgBytesPerBulk(){
-		if (this.fbulkStateCount() != 0 )
+		if (this.fbulkStateCount() != 0 ){
 			return (this.fbulkSizeTotal() / this.fbulkStateCount());
+		}
 		return 0;
 	}
 
 
 	//Client average packets per bulk
 	public long fAvgPacketsPerBulk(){
-		if (this.fbulkStateCount() != 0 )
+		if (this.fbulkStateCount() != 0 ){
 			return (this.fbulkPacketCount() / this.fbulkStateCount());
+		}
 		return 0;
 	}
 
 
 	//Client average bulk rate
 	public long fAvgBulkRate(){
-		if (this.fbulkDuration() != 0 )
+		if (this.fbulkDuration() != 0 ){
 			return (long)(this.fbulkSizeTotal() / this.fbulkDurationInSecond());
+		}
 		return 0;
 	}
 
@@ -536,21 +558,24 @@ public class BasicFlow {
 
 	//Server average bytes per bulk
 	public long bAvgBytesPerBulk(){
-		if(this.bbulkStateCount() != 0)
+		if(this.bbulkStateCount() != 0){
 			return (this.bbulkSizeTotal() /  this.bbulkStateCount());
+		}
 		return 0;
 	}
 
 	//Server average packets per bulk
 	public long bAvgPacketsPerBulk(){
-		if(this.bbulkStateCount() != 0 )
+		if(this.bbulkStateCount() != 0 ){
 			return (this.bbulkPacketCount() /  this.bbulkStateCount());
+		}
 		return 0;
 	}
 	//Server average bulk rate
 	public long bAvgBulkRate(){
-		if(this.bbulkDuration() != 0)
+		if(this.bbulkDuration() != 0){
 			return (long)(this.bbulkSizeTotal() / this.bbulkDurationInSecond());
+		}
 		return 0;
 	}
 
