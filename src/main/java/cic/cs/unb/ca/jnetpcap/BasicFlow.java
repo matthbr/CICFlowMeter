@@ -649,8 +649,8 @@ public class BasicFlow {
 			dump+="0,0,0,0,";
 		}
 		// flow duration is in microseconds, therefore packets per seconds = packets / (duration/1000000)
-		dump+=((double)(this.forwardBytes+this.backwardBytes))/((double)flowDuration/1000000L)+",";
-		dump+=((double)packetCount())/((double)flowDuration/1000000L)+",";
+		dump+=this.getFlowBytesPerSec()+",";
+		dump+=this.getFlowPacketsPerSec()+",";
 		dump+=this.flowIAT.getMean()+",";
 		dump+=this.flowIAT.getStandardDeviation()+",";
 		dump+=this.flowIAT.getMax()+",";
@@ -940,11 +940,19 @@ public class BasicFlow {
 
 	public double getFlowBytesPerSec(){
 		//flow duration is in microseconds, therefore packets per seconds = packets / (duration/1000000)
-		return ((double)(forwardBytes+backwardBytes))/((double)getFlowDuration()/1000000L);
+		if(getFlowDuration() > 0){
+			return ((double)(forwardBytes+backwardBytes))/((double)getFlowDuration()/1000000L);
+		}else{
+			return -1;
+		}
 	}
 
 	public double getFlowPacketsPerSec() {
-		return ((double)packetCount())/((double)getFlowDuration()/1000000L);
+		if(getFlowDuration() > 0){
+			return ((double)packetCount())/((double)getFlowDuration()/1000000L);
+		}else{
+			return -1;
+		}
 	}
 
 	public SummaryStatistics getFlowIAT() {
@@ -1142,8 +1150,8 @@ public class BasicFlow {
 			dump.append(0).append(separator);
 			dump.append(0).append(separator);
 			}
-		dump.append(((double)(forwardBytes+backwardBytes))/((double)flowDuration/1000000L)).append(separator);//21
-		dump.append(((double)packetCount())/((double)flowDuration/1000000L)).append(separator);//22
+		dump.append(getFlowBytesPerSec()).append(separator);//21
+		dump.append(getFlowPacketsPerSec()).append(separator);//22
 		dump.append(flowIAT.getMean()).append(separator);                            //23
 		dump.append(flowIAT.getStandardDeviation()).append(separator);                //24
 		dump.append(flowIAT.getMax()).append(separator);                            //25
